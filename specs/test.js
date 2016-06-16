@@ -41,12 +41,12 @@ describe('Cacher', () => {
     }, (delay * 1000) + 1000);
   }).timeout(5000);
 
-  it('should be able to expire a cached entry using refreshTTL', (done) => {
+  it('should be able to expire a cached entry using set a TTL', (done) => {
     let cacher = new Cacher();
     cacher.init(config.redis);
     cacher.setData('test3', {a: 12}, 15)
       .then(() => {
-        cacher.refreshTTL('test3', 0)
+        cacher.setTTL('test3', 0)
           .then(() => {
             cacher.getData('test3')
               .then((result) => {

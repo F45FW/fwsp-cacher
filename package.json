@@ -1,20 +1,16 @@
 {
   "name": "@flywheelsports/cacher",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A caching module for use with Node and Redis",
   "author": {
     "name": "Carlos Justiniano",
     "email": "carlos.justiniano@gmail.com"
   },
-  "contributors": [{
-    "name": "Artem Kochnev",
-    "email": "artem@flywheelsports.com"
-  }],
   "scripts": {
     "test": "mocha specs --reporter spec"
   },
   "engines": {
-    "node": ">=4.2.1"
+    "node": ">=6.2.1"
   },
   "repository": {
     "type": "git",
@@ -25,6 +21,7 @@
   },
   "homepage": "https://github.com/flywheelsports/cacher#readme",
   "dependencies": {
+    "@flywheelsports/jsutils": "^1.0.4",
     "bluebird": "^3.3.5",
     "redis": "^2.6.0-2"
   },

@@ -2,7 +2,7 @@
 
 const Promise = require('bluebird');
 const redis = require('redis');
-const crypto = require('crypto');
+const utils = require('@flywheelsports/jsutils');
 
 /**
  * @name cacher
@@ -67,19 +67,6 @@ class CacheDB {
       this.closeDB(db);
     });
   }
-
-  /**
-  * @name hash
-  * @summary Hashes a key to produce an MD5 hash
-  * @param {string} key - input key to hash
-  * @return {string} hash - hashed value
-  */
-  hash(key) {
-    return crypto
-      .createHash('md5')
-      .update(key)
-      .digest('hex');
-  }
 }
 
 /**
@@ -103,6 +90,16 @@ class Cacher extends CacheDB {
   */
   init(config) {
     super.init(config);
+    this.cachePrefix = 'cacher';
+  }
+
+  /**
+   * @name setCachePrefix
+   * @description Set the cache key prefix. The default is cacher.
+   * @param {string} name - text which will prefix cache key name
+   */
+  setCachePrefix(name) {
+    this.cachePrefix = name;
   }
 
   /**
@@ -112,7 +109,7 @@ class Cacher extends CacheDB {
    * @return {object} promise - promise resolving to value of key or rejection
    */
   getData(key) {
-    const hKeyLabel = `appcache:${this.hash(key)}`;
+    const hKeyLabel = `${this.cachePrefix}:${key}`;
     let db = null;
     return new Promise((resolve, reject) => {
       this.openDB()
@@ -122,7 +119,8 @@ class Cacher extends CacheDB {
             if (error) {
               reject(error);
             } else {
-              resolve(JSON.parse(result));
+              console.log('result', result);
+              resolve(utils.safeJSONParse(result));
             }
             this.closeDB(db);
           });
@@ -143,10 +141,7 @@ class Cacher extends CacheDB {
    * @return {object} promise - resolving to success or rejection
    */
   setData(key, data, cacheDurationInSeconds) {
-    const hKeyLabel = `appcache:${this.hash(key)}`;
-
-    // Added because Node 4.2.1 does not support ES6 default function parameters - CJ
-    cacheDurationInSeconds = (typeof cacheDurationInSeconds !== 'undefined') ? cacheDurationInSeconds : 0;
+    const hKeyLabel = `${this.cachePrefix}:${key}`;
 
     return new Promise((resolve, reject) => {
       let db = null;
@@ -166,14 +161,14 @@ class Cacher extends CacheDB {
   }
 
   /**
-   * @name RefreshTTL
-   * @summary Refresh Time To Live for cache entry associated with key.
-   * @param {string} key - key to refresh
+   * @name setTTL
+   * @summary Set Time To Live for cache entry associated with key.
+   * @param {string} key - key to set
    * @param {number} cacheDurationInSeconds - seconds to reset expiration to
    * @return {object} promise - resolving to success or rejection
    */
-  refreshTTL(key, cacheDurationInSeconds) {
-    const hKeyLabel = `appcache:${this.hash(key)}`;
+  setTTL(key, cacheDurationInSeconds) {
+    const hKeyLabel = `${this.cachePrefix}:${key}`;
 
     return new Promise((resolve, reject) => {
       let db = null;
@@ -184,7 +179,7 @@ class Cacher extends CacheDB {
             if (error) {
               reject(error);
             } else if (result) {
-              resolve(JSON.parse(result));
+              resolve(utils.safeJSONParse(result));
               this.setExpire(db, hKeyLabel, cacheDurationInSeconds, resolve, reject);
             } else {
               reject();
@@ -194,51 +189,6 @@ class Cacher extends CacheDB {
         });
     });
   }
-
-  /**
-   * @name GetDataWithFetchCallback
-   * @description Returns a promise that resolves with data when cached, otherwise calls "fetchCallback"
-   *      to get a new promise, then caches the result from that promise and resolves with that result.
-   * @param {string} key - lookup key
-   * @param {number} cacheDurationInSeconds - cache expiration
-   * @param {function} fetchCallback - function that will return a promise that resolves with the data that should be cached.
-   * @return {object} promise - promise resolving to value of key or rejection
-   */
-  getDataWithFetchCallback(key, cacheDurationInSeconds, fetchCallback) {
-    return new Promise((resolve, reject) => {
-      // Try to get data from cache
-      this.getData(key)
-        .then((cacheData) => {
-          // The data is cached, just resolve with it
-          resolve(cacheData);
-        })
-        .catch((err) => {
-          if (err !== null) {
-            // There was an actual error, so we reject
-            return reject(err);
-          }
-          // No error, but data was not cached, so we call the fetchCallback, which has to return a promise
-          fetchCallback()
-            .then((res) => {
-              // fetchCallback resolved with data, so we cache it
-              this.setData(key, res, cacheDurationInSeconds)
-                .then(() => {
-                  // Then resolve with that response
-                  resolve(res);
-                })
-                .catch((err) => {
-                  // We failed to cache it, so we reject with an error
-                  reject(err);
-                });
-            })
-            .catch((err) => {
-              // fetchCallback rejected, so we reject this whole method
-              reject(err);
-            });
-        });
-    });
-  }
-
 }
 
 module.exports = Cacher;
