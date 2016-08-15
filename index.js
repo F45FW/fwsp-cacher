@@ -189,6 +189,58 @@ class Cacher extends CacheDB {
         });
     });
   }
+
+  /**
+   * @name deleteData
+   * @summary Deletes cache entry associated with key
+   * @param {string} key - key to delete
+   * @return {object} promise - resolving to success or rejection
+   */
+  deleteData(key) {
+    const hKeyLabel = `${this.cachePrefix}:${key}`;
+
+    return new Promise((resolve, reject) => {
+      this.openDB()
+        .then(db => {
+          db.del(hKeyLabel, error => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
+        });
+    });
+  }
+
+  /**
+   * @name getDataWithFallback
+   * @summary Tries to fetch data from cache first, if not present, calls fallback function and caches it's result if it resolves.
+   * resolves with either cache result or result from fallback function
+   * @param {string} key - key to delete
+   * @param {number} cacheDurationInSeconds - cache expiration
+   * @param {function} fallback - fallback function that must return a promise
+   * @return {object} promise - resolving to success or rejection
+   */
+  getDataWithFallback(key, cacheDurationInSeconds, fallback) {
+    return new Promise((resolve, reject) => {
+      this.getData(key)
+        .then(res => {
+          if (res != null) {
+            return res;
+          }
+          return fallback()
+            .then(res => {
+              return this.setData(key, res, cacheDurationInSeconds)
+                .then(() => {
+                  return res;
+                });
+            });
+        })
+        .then(resolve)
+        .catch(reject);
+    });
+  }
 }
 
 module.exports = Cacher;
