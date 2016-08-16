@@ -1,6 +1,6 @@
 {
   "name": "@flywheelsports/cacher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A caching module for use with Node and Redis",
   "author": {
     "name": "Carlos Justiniano",
