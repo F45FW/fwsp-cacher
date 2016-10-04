@@ -30,10 +30,42 @@ cacher.setCachePrefix('myAppName');
 
 #### getData
 
+```javascript
+/**
+ * @name getData
+ * @summary Retrieve data from cache using key.
+ * @param {string} key - lookup key
+ * @return {object} promise - promise resolving to value of key or rejection
+ */
+ getData(key)
+```
+
 #### setData
+
+```javascript
+/**
+ * @name setData
+ * @summary Place data in cache based on key for a duration of cacheDurationInSeconds.
+ * @param {string} key - lookup key
+ * @param {object} data - data to store at key
+ * @param {number} cacheDurationInSeconds - cache expiration
+ * @return {object} promise - resolving to success or rejection
+ */
+ setData(key, data, cacheDurationInSeconds)
+```
 
 #### setTTL
 
+```javascript
+/**
+ * @name setTTL
+ * @summary Set Time To Live for cache entry associated with key.
+ * @param {string} key - key to set
+ * @param {number} cacheDurationInSeconds - seconds to reset expiration to
+ * @return {object} promise - resolving to success or rejection
+ */
+ setTTL(key, cacheDurationInSeconds)
+```
 
 ## Tests
 

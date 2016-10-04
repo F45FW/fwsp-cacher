@@ -119,7 +119,6 @@ class Cacher extends CacheDB {
             if (error) {
               reject(error);
             } else {
-              console.log('result', result);
               resolve(utils.safeJSONParse(result));
             }
             this.closeDB(db);
