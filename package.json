@@ -1,6 +1,6 @@
 {
-  "name": "@flywheelsports/cacher",
-  "version": "1.0.1",
+  "name": "fwsp-cacher",
+  "version": "1.0.2",
   "description": "A caching module for use with Node and Redis",
   "author": {
     "name": "Carlos Justiniano",
@@ -14,22 +14,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flywheelsports/cacher.git"
+    "url": "git+https://github.com/flywheelsports/fwsp-cacher.git"
   },
   "bin": {
     "cacher": "index.js"
   },
-  "homepage": "https://github.com/flywheelsports/cacher#readme",
+  "homepage": "https://github.com/flywheelsports/fwsp-cacher#readme",
   "dependencies": {
-    "@flywheelsports/jsutils": "^1.0.4",
     "bluebird": "^3.3.5",
+    "fwsp-jsutils": "1.0.8",
     "redis": "^2.6.0-2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^1.9.0",
-    "jscs": "^2.5.1",
-    "jscs-jsdoc": "^1.2.0",
-    "mocha": "^2.4.5"
+    "eslint": "^3.11.1",
+    "mocha": "^3.2.0"
   }
 }

@@ -2,7 +2,7 @@
 
 const Promise = require('bluebird');
 const redis = require('redis');
-const utils = require('@flywheelsports/jsutils');
+const utils = require('fwsp-jsutils');
 
 /**
  * @name cacher
