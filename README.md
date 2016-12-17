@@ -1,4 +1,7 @@
 # Cacher
+
+[![npm version](https://badge.fury.io/js/fwsp-cacher.svg)](https://badge.fury.io/js/fwsp-cacher) <span class="badge-npmdownloads"><a href="https://npmjs.org/package/fwsp-cacher" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/fwsp-cacher.svg" alt="NPM downloads" /></a></span> [![npm](https://img.shields.io/npm/l/fwsp-cacher.svg)]() [![Libraries.io for GitHub](https://img.shields.io/librariesio/github/flywheelsports/fwsp-cacher/fwsp-cacher.svg)]()  
+
 A simple module for caching using Redis.
 
 ## Introduction
