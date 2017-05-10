@@ -1,8 +1,8 @@
 'use strict';
 
 const Promise = require('bluebird');
-const redis = require('redis');
 const utils = require('fwsp-jsutils');
+const RedisConnection = require('fwsp-redis-connection');
 
 /**
  * @name cacher
@@ -32,15 +32,10 @@ class CacheDB {
   * @return {object} promise - resolving or rejecting if error
   */
   openDB() {
-    let db = redis.createClient(
-      this.config.port,
-      this.config.url,
-      null);
-    return new Promise((resolve, reject) => {
-      db.select(this.config.db, (err, reply) => {
-        (err) ? reject(err) : resolve(db);
-      });
-    });
+    let retryStrategy = this.config.retry_strategy;
+    delete this.config.retry_strategy;
+    let redisConnection = new RedisConnection(this.config);
+    return redisConnection.connect(retryStrategy)
   }
 
   /**

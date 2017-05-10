@@ -1,6 +1,6 @@
 {
   "name": "fwsp-cacher",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A caching module for use with Node and Redis",
   "author": {
     "name": "Carlos Justiniano",
@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/flywheelsports/fwsp-cacher#readme",
   "dependencies": {
-    "bluebird": "^3.3.5",
-    "fwsp-jsutils": "1.0.8",
-    "redis": "^2.6.0-2"
+    "bluebird": "3.5.0",
+    "fwsp-jsutils": "1.0.10",
+    "fwsp-redis-connection": "0.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
